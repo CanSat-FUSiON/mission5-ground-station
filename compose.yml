@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  influxdb:
+    image: influxdb
+    container_name: local-influxdb  #grafanaからアクセスするための名前
+    volumes:
+      - ./docker/grafana/influxdb/data:/var/lib/influxdb
+    ports:
+      - 8086:8086
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=User
+      - DOCKER_INFLUXDB_INIT_PASSWORD=adminadmin
+      - DOCKER_INFLUXDB_INIT_ORG=FUSiON
+      - DOCKER_INFLUXDB_INIT_BUCKET=Data
+      - DOCKER_INFLUXDB_INIT_RETENTION=6h
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=my-super-secret-auth-token
+
+  grafana:
+    image: grafana/grafana-enterprise
+    ports:
+      - 8085:3000 #grafanaのポート
+    user: "$PID:$GID"
+    volumes:
+      - ./docker/grafana/grafana:/var/lib/grafana
+    depends_on:
+      - influxdb
+    environment:
+      - GF_SERVER_ROOT_URL=http://localhost:8085
+      - GF_SECURITY_ADMIN_PASSWORD=admin
