@@ -18,7 +18,7 @@ https://qiita.com/ryotaro76/items/305d4d61dfd82e3f2bfa
     今のところユーザー名はadminでパスワードもadmin
 1. (地上局コマンド画面の起動) Windows上で以下のコマンドを実行
     ```
-    mission5-ground-station$ python3 esp32_client.py
+    mission5-ground-station/client$ python3 esp32_client.py
     ```
 ### 終了
 1. WSL2上で以下のコマンドを実行
