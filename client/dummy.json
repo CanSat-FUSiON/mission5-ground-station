@@ -1,0 +1,81 @@
+{
+    "fusion_core_mode": {
+        "mode": 0
+    },
+    "app_bme280": {
+        "valid": 1,
+        "temperature_degC": 20.43,
+        "humidity_pct": 79.93,
+        "pressure_hPa": 1021.15,
+        "altitude_m": -65.60
+    },
+    "app_bno055": {
+        "valid": 1,
+        "accel_x_mss": -0.37,
+        "accel_y_mss": 0.62,
+        "accel_z_mss": 9.50,
+        "mag_x_uT": -0.69,
+        "mag_y_uT": 24.06,
+        "mag_z_uT": -36.69,
+        "gyro_x_degs": 0.00,
+        "gyro_y_degs": 0.00,
+        "gyro_z_degs": 0.00,
+        "orient_x_deg": 3.94,
+        "orient_y_deg": 2.19,
+        "orient_z_deg": 0.08,
+        "quaternion_w": 0.999207,
+        "quaternion_x": 0.034363,
+        "quaternion_y": 0.019165,
+        "quaternion_z": 0.000000,
+        "mag_direction_deg": 1.64,
+        "count": 0
+    },
+    "app_current_L": {
+        "valid": 1,
+        "current_mA": 0.00,
+        "voltage_V": 11.42
+    },
+    "app_current_R": {
+        "valid": 1,
+        "current_mA": 1.00,
+        "voltage_V": 11.43
+    },
+    "app_flight_pin": {
+        "valid": 0,
+        "connect": 1,
+        "disconnect_count": 0
+    },
+    "app_gnss": {
+        "satellites": 4,
+        "hdop": 2.95,
+        "location_valid": 1,
+        "latitude_deg": 35.771491,
+        "longitude_deg": 139.863740,
+        "time_ms": 239575000,
+        "altitude_m": 124.20,
+        "course_deg": 0.00,
+        "speed_ms": 0.02
+    },
+    "app_motor_L": {
+        "throttle": 0.00,
+        "pwm_1_duty": 0.00,
+        "pwm_2_duty": -0.00
+    },
+    "app_motor_R": {
+        "throttle": 0.00,
+        "pwm_1_duty": 0.00,
+        "pwm_2_duty": -0.00
+    },
+    "app_spresense": {
+        "goal_detected": 0
+    },
+    "app_simulator": {
+        "mode": 0
+    },
+    "app_release_detection": {
+        "previous_altitude_m": -65.60,
+        "descent_count": 0,
+        "descent_count_threshold": 3,
+        "altitude_m_threshold": 1.50
+    }
+}
