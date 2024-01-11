@@ -32,12 +32,18 @@ class TelemetryLoop:
                 json_str += "}"
                 try:
                     json_data = json.loads(json_str)
-                    #print(json_data)
                 except json.JSONDecodeError:
+                    print(json_str)
+                    print("JSONDecodeError")
+                    json_str = ""
                     continue
-                
-                database.write(json_data)
                 json_str = ""
+                try:
+                    database.write(json_data)
+                except:
+                    print(json_data)
+                    print("DBWriteError")
+                    continue
             if in_json:
                 json_str += line_str
                 continue
