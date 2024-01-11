@@ -9,11 +9,14 @@ https://qiita.com/ryotaro76/items/305d4d61dfd82e3f2bfa
 1. WSL2上にこのリポジトリをクローン
 1. Windows上にこのリポジトリをクローン
 ### 起動
-1. WSL2上で以下のコマンドを実行
+1. (サーバーの起動) WSL2上で以下のコマンドを実行
 ```
 mission5-ground-station$ docker-compose up -d
 ```
-1. Windows上で以下のコマンドを実行
+1. (地上局テレメ画面の起動) Windows上で`http://localhost:8085/dashboards`にアクセス
+    
+    今のところユーザー名はadminでパスワードもadmin
+1. (地上局コマンド画面の起動) Windows上で以下のコマンドを実行
 ```
 mission5-ground-station$ python3 esp32_client.py
 ```
