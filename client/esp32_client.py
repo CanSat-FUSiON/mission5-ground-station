@@ -1,4 +1,5 @@
 import serial
+import serial.tools.list_ports
 import json
 import threading
 import time
@@ -6,6 +7,10 @@ import sys
 import write_db
 
 kill_flag = False
+
+ports = list(serial.tools.list_ports.comports())
+for p in ports:
+    print(p)
 
 PORT = str(input("COM Port (ex. COM10): "))
 ser = serial.Serial()
