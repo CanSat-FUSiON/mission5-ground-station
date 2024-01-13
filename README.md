@@ -15,7 +15,7 @@
 ### 起動
 1. (サーバーの起動) 以下のコマンドを実行
     ```
-    mission5-ground-station$ docker-compose up -d
+    mission5-ground-station$ docker compose up -d
     ```
 1. (地上局テレメ画面の起動) `http://localhost:8085/dashboards`にアクセス
     
@@ -28,7 +28,7 @@
 1. `esp32_client.py`を実行しているターミナルでCtrl+Cを押す
 1. 以下のコマンドを実行
     ```
-    mission5-ground-station$ docker-compose down
+    mission5-ground-station$ docker compose down
     ```
 
 ## ファイル・ディレクトリ構成
