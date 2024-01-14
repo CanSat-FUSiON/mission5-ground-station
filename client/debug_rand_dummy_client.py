@@ -14,6 +14,7 @@ class WriteDb:
         self.org = "FUSiON"
         self.bucket = "Data"
         self.url = "http://localhost:8086"
+        #self.url = "http://127.0.0.1:8086"
 
         # Client作成
         self.client = influxdb_client.InfluxDBClient(url=self.url, token=self.token, org=self.org)
@@ -49,6 +50,25 @@ class WriteDb:
             #end_time = time.time()
             #time_diff = end_time - start_time
             #print(time_diff)
+    
+    def write_bulk(self, json_data):
+        # バルク書き込みのためのリストを初期化
+        points = []
+
+        for tagkey, apps in json_data.items():
+            point = Point("FUSiON_CanSat").tag("_tag", tagkey)
+            
+            for fieldkey, values in apps.items():
+                point.field(tagkey+'_'+fieldkey, values)
+
+            # バルク書き込み用のリストにポイントを追加
+            points.append(point)
+
+        # バルク書き込み
+        self.write_api.write(bucket=self.bucket, org=self.org, record=points)
+        
+        # クライアントを閉じる
+        self.client.close()
 
 def create_rand():
         randint_value = [random.randint(0,1) for i in range(10)]
@@ -147,26 +167,38 @@ def create_rand():
         #print(json_str)
         return json_str
 
+# ループ内で計測した時間を格納するリスト
+time_diff_list = []
 cnt = 0
 
 while True:
     print("sending...{}".format(cnt))
     json_str = create_rand()
+
     try:
         json_data = json.loads(json_str)
-        #start_time = time.time()
-        WriteDb().write(json_data)
-        #end_time = time.time()
+        start_time = time.time()
+        # WriteDb().write(json_data)
+        WriteDb().write_bulk(json_data)
+        end_time = time.time()
         cnt += 1
     except KeyboardInterrupt:
         sys.exit
     except:
-        print(json_data)
+        # print(json_data)
         print("DBWriteError")
         continue
-    #time_diff = end_time - start_time
-    #print(time_diff)
-    if cnt == 100:
+
+    time_diff = end_time - start_time
+    time_diff_list.append(time_diff)
+
+    print(time_diff)
+    print(cnt)
+
+    if cnt == 3000:
+        # 設定された実行数に達したら平均時間を計算して表示
+        avg_time_diff = sum(time_diff_list) / len(time_diff_list)
+        print("平均時間: {}".format(avg_time_diff))
         print("設定された実行数です")
         sys.exit()
     #time.sleep(0.05)
