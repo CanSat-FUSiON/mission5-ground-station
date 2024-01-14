@@ -3,6 +3,7 @@ import json
 import random
 import time
 import sys
+import write_db
 import influxdb_client, os, time
 from influxdb_client import InfluxDBClient, Point, WritePrecision
 from influxdb_client.client.write_api import SYNCHRONOUS
@@ -68,7 +69,7 @@ class WriteDb:
         self.write_api.write(bucket=self.bucket, org=self.org, record=points)
         
         # クライアントを閉じる
-        self.client.close()
+        #self.client.close()
 
 def create_rand():
         randint_value = [random.randint(0,1) for i in range(10)]
@@ -170,6 +171,7 @@ def create_rand():
 # ループ内で計測した時間を格納するリスト
 time_diff_list = []
 cnt = 0
+database = write_db.WriteDb()
 
 while True:
     print("sending...{}".format(cnt))
@@ -178,8 +180,8 @@ while True:
     try:
         json_data = json.loads(json_str)
         start_time = time.time()
-        # WriteDb().write(json_data)
-        WriteDb().write_bulk(json_data)
+        # database.write(json_data)
+        database.write_bulk(json_data)
         end_time = time.time()
         cnt += 1
     except KeyboardInterrupt:

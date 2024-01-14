@@ -34,3 +34,19 @@ class WriteDb:
          # print("Line:{}".format(point))
          # DB書き込み
          self.write_api.write(bucket=self.bucket, org=self.org, record=point)
+
+   def write_bulk(self, json_data):
+      # バルク書き込みのためのリストを初期化
+      points = []
+
+      for tagkey, apps in json_data.items():
+         point = Point("FUSiON_CanSat").tag("_tag", tagkey)
+         
+         for fieldkey, values in apps.items():
+            point.field(tagkey+'_'+fieldkey, values)
+
+            # バルク書き込み用のリストにポイントを追加
+            points.append(point)
+
+      # バルク書き込み
+      self.write_api.write(bucket=self.bucket, org=self.org, record=points)
