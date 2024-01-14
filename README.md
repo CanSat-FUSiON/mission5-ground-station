@@ -15,7 +15,7 @@
 ### 起動
 1. (サーバーの起動) 以下のコマンドを実行
     ```
-    mission5-ground-station$ docker-compose up -d
+    mission5-ground-station$ docker compose up -d
     ```
 1. (地上局テレメ画面の起動) `http://localhost:8085/dashboards`にアクセス
     
@@ -28,7 +28,7 @@
 1. `esp32_client.py`を実行しているターミナルでCtrl+Cを押す
 1. 以下のコマンドを実行
     ```
-    mission5-ground-station$ docker-compose down
+    mission5-ground-station$ docker compose down
     ```
 
 ## ファイル・ディレクトリ構成
@@ -38,3 +38,6 @@
     - write_db.py : ***_client.pyから受信したJSONをDBに書き込むプログラム
     - esp32_client.py : ESP32からJSONを受信し，コマンドを送信するプログラム
     - dummy_client.py : dummy.jsonを読み込むプログラム
+    - debug_rand_dummy_client.py : Debug用
+    - rand_dummy_client.py : ランダムなテレメトリ値を持つJSONをDBに書き込むプログラム
+    - create_json.py : ランダムなテレメトリ値を持つJSONを作成するプログラム
