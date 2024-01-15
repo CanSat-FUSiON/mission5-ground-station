@@ -10,7 +10,8 @@ while True:
     try: 
         with open('dummy.json', 'r') as f:
             json_data = json.load(f)
-            database.write(json_data)
+            #database.write(json_data)
+            database.write_bulk(json_data)
     except KeyboardInterrupt:
         sys.exit
     except:

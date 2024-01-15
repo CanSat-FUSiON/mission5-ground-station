@@ -38,3 +38,6 @@
     - write_db.py : ***_client.pyから受信したJSONをDBに書き込むプログラム
     - esp32_client.py : ESP32からJSONを受信し，コマンドを送信するプログラム
     - dummy_client.py : dummy.jsonを読み込むプログラム
+    - debug_rand_dummy_client.py : Debug用
+    - rand_dummy_client.py : ランダムなテレメトリ値を持つJSONをDBに書き込むプログラム
+    - create_json.py : ランダムなテレメトリ値を持つJSONを作成するプログラム
