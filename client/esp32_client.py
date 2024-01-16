@@ -13,8 +13,11 @@ for p in ports:
     print(p)
 
 PORT = str(input("COM Port (ex. COM10): "))
+baudrate = str(input("Baudrate (option): "))
+if baudrate == "":
+    baudrate = 115200
 ser = serial.Serial()
-ser.baudrate = 115200
+ser.baudrate = baudrate
 ser.timeout = 0.1 
 ser.port = PORT
 ser.open()
@@ -44,7 +47,7 @@ class TelemetryLoop:
                     continue
                 json_str = ""
                 try:
-                    database.write(json_data)
+                    database.write_bulk(json_data)
                 except:
                     print(json_data)
                     print("DBWriteError")
