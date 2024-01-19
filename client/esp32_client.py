@@ -32,7 +32,11 @@ class TelemetryLoop:
 
         while not kill_flag:
             line_byte = ser.readline()
-            line_str = line_byte.strip().decode()
+            line_str = ""
+            try:
+                line_str = line_byte.strip().decode()
+            except:
+                continue
             if line_str == "{":
                 in_json = True
             elif line_str == "}":
