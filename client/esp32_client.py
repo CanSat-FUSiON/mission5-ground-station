@@ -5,6 +5,7 @@ import threading
 import time
 import sys
 import write_db
+import csv_logger
 
 kill_flag = False
 
@@ -15,12 +16,14 @@ for p in ports:
 PORT = str(input("COM Port (ex. COM10): "))
 baudrate = str(input("Baudrate (option): "))
 if baudrate == "":
-    baudrate = 115200
+    baudrate = 921600
 ser = serial.Serial()
 ser.baudrate = baudrate
 ser.timeout = 0.1 
 ser.port = PORT
 ser.open()
+
+logger = csv_logger.CsvLogger()
 
 class TelemetryLoop:
     global kill_flag
@@ -56,6 +59,7 @@ class TelemetryLoop:
                     print(json_data)
                     print("DBWriteError")
                     continue
+                logger.write_data(json_data)
             if in_json:
                 json_str += line_str
                 continue
@@ -73,6 +77,7 @@ def close():
             time.sleep(1)
     except KeyboardInterrupt:
         kill_flag=True
+        logger.close()
         sys.exit
 
 thread_Tlm = threading.Thread(target=TelemetryLoop, daemon=True)
