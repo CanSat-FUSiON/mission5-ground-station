@@ -22,12 +22,12 @@ class CsvLogger:
       if self.first:
          self.write_legend(json_data)
          self.first = False
-      self.file.write('{:.1f}'.format(time.time()))
+      line = '{:.1f}'.format(time.time())
       for tagkey, apps in json_data.items():
          for fieldkey, values in apps.items():
-            self.file.write(str(values))
-            self.file.write(",")
-      self.file.write("\n")
+            line += (str(values) + ",")
+      line += "\n"
+      self.file.write(line)
    
    def close(self):
       self.file.close()
