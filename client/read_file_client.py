@@ -7,6 +7,8 @@ import write_db
 # モジュールのインポート
 import os, tkinter, tkinter.filedialog, tkinter.messagebox
 
+import csv_logger
+
 # ファイル選択ダイアログの表示
 root = tkinter.Tk()
 root.withdraw()
@@ -15,6 +17,8 @@ iDir = os.path.abspath(os.path.dirname(__file__))
 file = tkinter.filedialog.askopenfilename(filetypes = fTyp,initialdir = iDir)
 kill_flag = False
 f = open(file, mode="r")
+
+logger = csv_logger.CsvLogger()
 class TelemetryLoop:
     global kill_flag
     def __init__(self):
@@ -24,8 +28,9 @@ class TelemetryLoop:
         json_str = ""
 
         while not kill_flag:
-            time.sleep(0.001)
+            #time.sleep(0.001)
             line_byte = f.readline()
+
             line_str = ""
             try:
                 line_str = line_byte.strip()
@@ -44,13 +49,8 @@ class TelemetryLoop:
                     print("JSONDecodeError")
                     json_str = ""
                     continue
+                logger.write_data(json_data)
                 json_str = ""
-                try:
-                    database.write_bulk(json_data)
-                except:
-                    print(json_data)
-                    print("DBWriteError")
-                    continue
             if in_json:
                 json_str += line_str
                 continue
@@ -61,6 +61,7 @@ def close():
             time.sleep(1)
     except KeyboardInterrupt:
         kill_flag=True
+        logger.close()
         sys.exit
 
 thread_Tlm = threading.Thread(target=TelemetryLoop, daemon=True)

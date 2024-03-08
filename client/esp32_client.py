@@ -6,6 +6,8 @@ import time
 import sys
 import write_db
 import csv_logger
+import os
+
 
 kill_flag = False
 
@@ -36,6 +38,7 @@ class TelemetryLoop:
         while not kill_flag:
             line_byte = ser.readline()
             line_str = ""
+
             try:
                 line_str = line_byte.strip().decode()
             except:
@@ -48,7 +51,7 @@ class TelemetryLoop:
                 try:
                     json_data = json.loads(json_str)
                 except json.JSONDecodeError:
-                    print(json_str)
+                    #print(json_str)
                     print("JSONDecodeError")
                     json_str = ""
                     continue
@@ -56,10 +59,14 @@ class TelemetryLoop:
                 try:
                     database.write_bulk(json_data)
                 except:
-                    print(json_data)
+                    #print(json_data)
                     print("DBWriteError")
+                    print("\033[2J\033[1;1H")
+                    print(json_data)
                     continue
                 logger.write_data(json_data)
+                print("\033[2J\033[1;1H")
+                print(json_data)
             if in_json:
                 json_str += line_str
                 continue
@@ -79,10 +86,10 @@ def close():
         kill_flag=True
         logger.close()
         sys.exit
-
+os.system('cls')
 thread_Tlm = threading.Thread(target=TelemetryLoop, daemon=True)
 thread_Com = threading.Thread(target=Commandloop, daemon=True)
 thread_Tlm.start()
-thread_Com.start()
+#thread_Com.start()
 
 close()
