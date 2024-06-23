@@ -19,7 +19,7 @@ class CSVEditor:
         root.config(menu=menubar)
         
         # シートを作成
-        self.sheet = Sheet(root)
+        self.sheet = Sheet(root, width=600, height=200)  # サイズを指定
         self.sheet.enable_bindings((
             "single_select",  # シングルクリックでセルを選択
             "column_select",
@@ -55,13 +55,31 @@ class CSVEditor:
         
         self.current_file = None
 
+        # デフォルトの100行100列を設定
+        self.default_data = [["" for _ in range(100)] for _ in range(100)]
+        self.sheet.set_sheet_data(data=self.default_data)
+
     def open_file(self):
         file_path = filedialog.askopenfilename(filetypes=[("CSV files", "*.csv")])
         if file_path:
             try:
                 df = pd.read_csv(file_path)
-                self.sheet.set_sheet_data(data=df.values.tolist())
-                self.sheet.headers(df.columns.tolist())
+                data = df.values.tolist()
+                headers = df.columns.tolist()
+
+                # CSVの行数・列数を取得
+                csv_rows = len(data)
+                csv_cols = len(headers)
+
+                # デフォルトの行数・列数を100にする
+                for _ in range(csv_rows, 100):
+                    data.append(["" for _ in range(csv_cols)])
+                for row in data:
+                    row.extend(["" for _ in range(csv_cols, 100)])
+
+                # データとヘッダーをシートに設定
+                self.sheet.set_sheet_data(data=data)
+                self.sheet.headers(headers)
                 self.current_file = file_path
             except Exception as e:
                 messagebox.showerror("Error", f"Failed to open file: {e}")
