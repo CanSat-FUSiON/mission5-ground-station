@@ -1,3 +1,3 @@
 cmdID,Prm1,Prm2,Prm3,Prm4,Prm5,Prm6,Prm7
-A,1,2,3,4,5
-B,A,2,3,4
+A_com,1,2,3,4,5.0,,
+B,A,2,3,4,,,
