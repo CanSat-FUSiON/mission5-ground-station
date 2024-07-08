@@ -1,4 +1,4 @@
-/*
+
 import processing.net.*;
 
 int port = 10001; // 適当なポート番号を設定
@@ -39,11 +39,16 @@ void rx_pars(){
     if (client !=null) {
         String whatClientSaid = client.readString();
         if (whatClientSaid != null) {
-            println(whatClientSaid); // Pythonからのメッセージを出力
-            String[] dataArray = whatClientSaid.split(",");
-            roll = float(dataArray[0]);
-            pitch = float(dataArray[1]);
-            yaw = float(dataArray[2]);
+            // jsonオブジェクトを生成
+            JSONObject json = parseJSONObject(whatClientSaid);
+            // euler_angleオブジェクトを取得
+            JSONObject eulerAngle = json.getJSONObject("euler_angle");
+            // roll,pitch,yawをfloat型に変換
+            // roll, pitch, yawの値を取得してfloat型に変換
+            roll = eulerAngle.getFloat("roll");
+            pitch = eulerAngle.getFloat("pitch");
+            yaw = eulerAngle.getFloat("yaw");
+
         } 
     } 
 }
