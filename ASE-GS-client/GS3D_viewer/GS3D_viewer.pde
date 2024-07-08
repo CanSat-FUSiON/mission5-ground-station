@@ -1,3 +1,4 @@
+/*
 import processing.net.*;
 
 int port = 10001; // 適当なポート番号を設定
@@ -69,3 +70,4 @@ void satellite_draw(){
     k = 40;
     box(2*k,3*k,1*k);
 }
+//*/

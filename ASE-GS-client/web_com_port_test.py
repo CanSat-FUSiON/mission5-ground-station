@@ -8,6 +8,11 @@ import numpy as np
 import socket
 import threading
 
+import time # !デバッグ用
+
+# デバッグモードの場合：true
+Debug = True
+
 # グローバル変数の設定
 kill_flag = False
 comport_data = []
@@ -69,17 +74,6 @@ def send_data(data):
         # data = f"{roll},{pitch},{yaw}"
         socket_client.send(data.encode('utf-8'))
 
-# テレメトリからオイラー角だけ取り出す
-# roll, pitch, yaw のパラメータをカンマ区切りの文字列として取り出す関数
-def extract_euler_angle(data):
-    orientation = data.get("euler_angle", {})
-    roll = orientation.get("roll", None)
-    pitch = orientation.get("pitch", None)
-    yaw = orientation.get("yaw", None)
-    # カンマ区切りの文字列として結合
-    orientation_str = f"{roll}, {pitch}, {yaw}"
-    return orientation_str
-
 class TelemetryLoop:
     def __init__(self):
         global kill_flag
@@ -87,9 +81,11 @@ class TelemetryLoop:
         json_str = ""
 
         while not kill_flag:
+            time.sleep(1)
             json_str = generate_random_data()
             json_data = json.loads(json_str)
             # InfluxDB & txt_tlm
+            """
             try:
                 # database.write_bulk(json_data)  # データベースへの書き込みは省略
                 comport_data.insert(0, json_str)
@@ -99,6 +95,7 @@ class TelemetryLoop:
             except:
                 print("DBWriteError")
                 sys.exit()
+            """
 
             # 3D viewer
             try:
@@ -106,11 +103,13 @@ class TelemetryLoop:
                 port = 10001       #Processingで設定したポート番号
                 socket_client = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #オブジェクトの作成
                 socket_client.connect((host, port))
-                data = extract_euler_angle(json_data)
+                #data = extract_euler_angle(json_data)
+                data = json_str
                 # print(json_data)
                 socket_client.send(data.encode('utf-8')) #データを送信 Python3
             except:
-                print("socket error")
+                if Debug :
+                    print("socket error")
 
 class Commandloop:
     def __init__(self):
@@ -188,13 +187,15 @@ def data():
     return jsonify(comport_data)
 
 def start_flask():
-    app.run(debug=False, use_reloader=False, port=8080)
+    app.run(debug=False, use_reloader=False, port=10009)
 
 if __name__ == '__main__':
     # Flaskスレッドの開始
+    """
     flask_thread = threading.Thread(target=start_flask)
     flask_thread.daemon = True
     flask_thread.start()
+    """
 
     # テレメトリループとコマンドループのスレッド開始
     thread_Tlm = threading.Thread(target=TelemetryLoop, daemon=True)
