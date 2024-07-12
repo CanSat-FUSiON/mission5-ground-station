@@ -5,6 +5,20 @@ import pandas as pd
 from tksheet import Sheet
 import queue
 
+import socket
+import sys
+
+host = "127.0.0.1"
+port_cmd_listener = 10003
+
+# デバッグモードの場合：true
+Debug = False
+
+def send_command(command):
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.connect((host, port_cmd_listener))
+        s.sendall(command.encode('utf-8'))
+
 class CSVEditorApp:
     def __init__(self, root):
         self.root = root
@@ -136,9 +150,24 @@ class CSVEditorApp:
         while not self.fifo_queue.empty():
             row_data = self.fifo_queue.get()
             if self.send_option.get() == "ASCII":
-                print(f"ASCII: {','.join(map(str, row_data))}")
+                #print(f"ASCII: {','.join(map(str, row_data))}")
+                cmd = "ASCII: " + ','.join(map(str, row_data))
+                print(cmd)
+                try :
+                    send_command(cmd)
+                except:
+                    print("port-error")
+                    sys.exit()
+    
             elif self.send_option.get() == "Binary":
-                print(f"Binary: {','.join(map(str, row_data))}")
+                #print(f"Binary: {','.join(map(str, row_data))}")
+                cmd = "Binary: " + ','.join(map(str, row_data))
+                print(cmd)
+                try :
+                    send_command(cmd)
+                except:
+                    print("port-error")
+                    sys.exit()
             temp_queue.put(row_data)
 
         # Put the data back into the original queue
