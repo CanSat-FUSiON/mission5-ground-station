@@ -5,7 +5,11 @@ import json
 import sys
 import numpy as np
 import socket
+import serial
+import serial.tools.list_ports
 import threading
+import write_db
+import csv_logger
 
 # デバッグモードの場合：true
 Debug = False
@@ -66,16 +70,23 @@ port_3dviewer = 10002
 port_cmd_listener = 10003
 
 class TelemetryLoop:
+    global kill_flag
     def __init__(self):
-        global kill_flag
+        database = write_db.WriteDb()
+
         in_json = False
         json_str = ""
 
         while not kill_flag:
-            time.sleep(1)
+            time.sleep(0.5)
             json_str = generate_random_data()
             json_data = json.loads(json_str)
 
+            try:
+                database.write_bulk(json_data)  # データベースへの書き込みは省略
+            except:
+                print("DBWriteError")
+                sys.exit()
             # 3D viewer
             try:
                 socket_client = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #オブジェクトの作成
