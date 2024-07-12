@@ -92,9 +92,11 @@ class Commandloop:
         threading.Thread(target=self.listen_for_commands, daemon=True).start()
 
         while not kill_flag:
-            cmd = input("Command: ") + '\n'
-            commands.append(cmd)
-            print(cmd)
+            print("command:")
+            cmd = input() + '\n'
+            #commands.append(cmd)
+            if Debug:
+                print("   " + cmd, end = "")
     
     def listen_for_commands(self):
         global commands
@@ -108,9 +110,11 @@ class Commandloop:
                         data = conn.recv(1024)
                         if not data:
                             break
-                        cmd = data.decode('utf-8') + '\n'
-                        commands.append(cmd)
-                        print(f"Received command from {addr}: {cmd}")
+                        cmd = data.decode('utf-8')
+                        #commands.append(cmd)
+                        #print(f"Received command from {addr}: {cmd}")
+                        print("from_UI  :" + cmd)
+                        print("command:")
 
 def close():
     global kill_flag
