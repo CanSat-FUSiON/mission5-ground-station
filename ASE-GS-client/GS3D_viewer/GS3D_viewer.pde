@@ -1,7 +1,7 @@
 
 import processing.net.*;
 
-int port = 10001; // 適当なポート番号を設定
+int port = 10002; // 適当なポート番号を設定
 
 Server server;
 

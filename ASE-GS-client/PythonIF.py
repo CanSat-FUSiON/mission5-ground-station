@@ -1,4 +1,3 @@
-from flask import Flask, render_template_string, jsonify
 import threading
 import time
 import random
@@ -8,15 +7,15 @@ import numpy as np
 import socket
 import threading
 
-import time # !デバッグ用
-
 # デバッグモードの場合：true
-Debug = True
+Debug = False
 
 # グローバル変数の設定
 kill_flag = False
 comport_data = []
+commands = []
 
+# ===============================================ランダムテレメトリ生成===============================================
 # ランダムテレメトリの値の範囲
 mode_range = (0, 3)
 temperature_range = (-40.0, 85.0)
@@ -57,22 +56,14 @@ def generate_random_data():
     }
     return json.dumps(data)
 
+# ===============================================テレメトリloop内部処理===============================================
+
 # processingにデータ送信
 # ソケット設定
 host = "127.0.0.1"
-port = 10001
-socket_client = None
-
-def socket_thread():
-    global socket_client
-    socket_client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    socket_client.connect((host, port))
-
-def send_data(data):
-    global socket_client
-    if socket_client is not None:
-        # data = f"{roll},{pitch},{yaw}"
-        socket_client.send(data.encode('utf-8'))
+port_cmdUI = 10001
+port_3dviewer = 10002
+port_cmd_listener = 10003
 
 class TelemetryLoop:
     def __init__(self):
@@ -84,40 +75,42 @@ class TelemetryLoop:
             time.sleep(1)
             json_str = generate_random_data()
             json_data = json.loads(json_str)
-            # InfluxDB & txt_tlm
-            """
-            try:
-                # database.write_bulk(json_data)  # データベースへの書き込みは省略
-                comport_data.insert(0, json_str)
-                if len(comport_data) > 10:
-                    comport_data.pop()
-                time.sleep(1)
-            except:
-                print("DBWriteError")
-                sys.exit()
-            """
 
             # 3D viewer
             try:
-                host = "127.0.0.1" #Processingで立ち上げたサーバのIPアドレス
-                port = 10001       #Processingで設定したポート番号
                 socket_client = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #オブジェクトの作成
-                socket_client.connect((host, port))
-                #data = extract_euler_angle(json_data)
+                socket_client.connect((host, port_3dviewer))
                 data = json_str
-                # print(json_data)
                 socket_client.send(data.encode('utf-8')) #データを送信 Python3
             except:
-                if Debug :
+                if Debug:
                     print("socket error")
 
 class Commandloop:
     def __init__(self):
-        global kill_flag
+        global kill_flag, commands
+        threading.Thread(target=self.listen_for_commands, daemon=True).start()
+
         while not kill_flag:
-            cmd = input("Command: ")+'\n'
-            # ser.write(cmd.encode())  # シリアルポートへの書き込みは省略
+            cmd = input("Command: ") + '\n'
+            commands.append(cmd)
             print(cmd)
+    
+    def listen_for_commands(self):
+        global commands
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.bind((host, port_cmd_listener))
+            s.listen()
+            while not kill_flag:
+                conn, addr = s.accept()
+                with conn:
+                    while not kill_flag:
+                        data = conn.recv(1024)
+                        if not data:
+                            break
+                        cmd = data.decode('utf-8') + '\n'
+                        commands.append(cmd)
+                        print(f"Received command from {addr}: {cmd}")
 
 def close():
     global kill_flag
@@ -128,79 +121,11 @@ def close():
         kill_flag = True
         sys.exit()
 
-# Flaskの設定
-app = Flask(__name__)
-
-# Template for the web page
-template = """
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Comport Data</title>
-    <style>
-      body {
-        background-color: black;
-        color: white;
-        font-family: monospace;
-      }
-      ul {
-        list-style-type: none;
-        padding: 0;
-      }
-      li {
-        white-space: pre-wrap;
-      }
-    </style>
-    <script type="text/javascript">
-      function fetchData() {
-        fetch('/data')
-          .then(response => response.json())
-          .then(data => {
-            let dataList = document.getElementById('dataList');
-            dataList.innerHTML = '';
-            data.forEach(item => {
-              let li = document.createElement('li');
-              li.textContent = JSON.stringify(item, null, 2);
-              dataList.appendChild(li);
-            });
-          });
-      }
-      setInterval(fetchData, 1000); // Update data every second
-    </script>
-  </head>
-  <body onload="fetchData()">
-    <h1>Comport Data</h1>
-    <ul id="dataList">
-    </ul>
-  </body>
-</html>
-"""
-
-@app.route('/')
-def index():
-    return render_template_string(template)
-
-@app.route('/data')
-def data():
-    return jsonify(comport_data)
-
-def start_flask():
-    app.run(debug=False, use_reloader=False, port=10009)
-
+# ===============================================main処理===============================================
 if __name__ == '__main__':
-    # Flaskスレッドの開始
-    """
-    flask_thread = threading.Thread(target=start_flask)
-    flask_thread.daemon = True
-    flask_thread.start()
-    """
-
     # テレメトリループとコマンドループのスレッド開始
     thread_Tlm = threading.Thread(target=TelemetryLoop, daemon=True)
     thread_Com = threading.Thread(target=Commandloop, daemon=True)
     thread_Tlm.start()
     thread_Com.start()
-
     close()
