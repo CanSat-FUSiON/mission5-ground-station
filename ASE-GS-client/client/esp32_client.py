@@ -23,7 +23,7 @@ commands = []
 comport_is = str(input("COM Port (ex. COM10): "))
 baudrate = str(input("Baudrate (option): "))
 if baudrate == "":
-    baudrate = 921600
+    baudrate = 115200
 ser = serial.Serial()
 ser.baudrate = baudrate
 ser.timeout = 0.1 
@@ -53,6 +53,7 @@ class TelemetryLoop:
             try:
                 line_str = line_byte.strip().decode()
             except:
+                print(".")
                 continue
             if line_str == "{":
                 in_json = True
@@ -62,8 +63,9 @@ class TelemetryLoop:
                 try:
                     json_data = json.loads(json_str)
                 except json.JSONDecodeError:
-                    print(json_str)
-                    print("JSONDecodeError")
+                    #print(json_str)
+                    print("!Error message!:JSONDecodeError")
+                    print("command:")
                     json_str = ""
                     continue
                 json_str = ""
