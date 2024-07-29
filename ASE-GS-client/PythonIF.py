@@ -38,24 +38,33 @@ def generate_random_data():
         "state_info": {
             "mode": random.randint(*mode_range)
         },
-        "temperature_humidity_pressure": {
+        "bme_data": {
             "temperature_deg_C": random.uniform(*temperature_range),
             "humidity_pct": random.uniform(*humidity_range),
             "pressure_hPa": random.uniform(*pressure_range)
         },
-        "euler_angle": {
+        "euler_angle_deg": {
             "roll": random.uniform(*roll_range),
             "pitch": random.uniform(*pitch_range),
             "yaw": random.uniform(*yaw_range)
         },
-        "gyro": {
-            "gyro_x": random.uniform(*gyro_range),
-            "gyro_y": random.uniform(*gyro_range),
-            "gyro_z": random.uniform(*gyro_range)
+        "gyro_deg_sec": {
+            "x": random.uniform(*gyro_range),
+            "y": random.uniform(*gyro_range),
+            "z": random.uniform(*gyro_range)
         },
-        "power_current_voltage": {
-            "A": random.uniform(*current_range),
-            "V": random.uniform(*voltage_range)
+        "Battery_current_A": {
+            "A": random.uniform(*current_range)
+        },
+        "ADC_current_A": {
+            "_1": random.uniform(*current_range),
+            "_2": random.uniform(*current_range),
+            "_3": random.uniform(*current_range),
+            "_4": random.uniform(*current_range)
+        },
+        "thermistor_current": {
+            "_1": random.uniform(*current_range),
+            "_2": random.uniform(*current_range)
         }
     }
     return json.dumps(data)
