@@ -151,7 +151,8 @@ class CSVEditorApp:
             row_data = self.fifo_queue.get()
             if self.send_option.get() == "ASCII":
                 #print(f"ASCII: {','.join(map(str, row_data))}")
-                cmd = "ASCII: " + ','.join(map(str, row_data))
+                #cmd = "ASCII: " + ','.join(map(str, row_data))
+                cmd = ''.join(map(str, row_data))
                 print(cmd)
                 try :
                     send_command(cmd)
@@ -163,11 +164,14 @@ class CSVEditorApp:
                 #print(f"Binary: {','.join(map(str, row_data))}")
                 cmd = "Binary: " + ','.join(map(str, row_data))
                 print(cmd)
+                print("Unimplemented")
+                """
                 try :
                     send_command(cmd)
                 except:
                     print("port-error")
                     sys.exit()
+                """
             temp_queue.put(row_data)
 
         # Put the data back into the original queue
