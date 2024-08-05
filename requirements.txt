@@ -41,7 +41,6 @@ pytz==2024.1
 PyYAML==6.0.1
 reactivex==4.0.4
 rsa==4.9
-serial==0.0.97
 simple-websocket==1.0.0
 six==1.16.0
 tenacity==9.0.0

@@ -4,6 +4,27 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 from stl import mesh
+import os
+
+# スクリプトのディレクトリを取得
+script_dir = os.path.dirname(os.path.abspath(__file__))
+print(script_dir)
+
+# 相対パスを絶対パスに変換
+relative_path = 'CubeSat-edu2-convert.stl'
+full_path = os.path.join(script_dir, relative_path)
+
+# 絶対パスを出力（デバッグ用）
+print(f"Absolute path: {full_path}")
+
+# ファイルの存在を確認
+if os.path.exists(full_path):
+    print("File exists")
+else:
+    print("File does not exist")
+
+# 必要に応じて作業ディレクトリを変更する
+os.chdir(script_dir)  # 必要な場合のみコメントを外してください
 
 # サーバーのポート番号
 PORT = 10002
@@ -112,7 +133,7 @@ def draw_satellite(ax, data):
     ax.set_zlabel('Z')
 
 # STLファイルの読み込み
-data = mesh.Mesh.from_file('ASE-GS-client/test/CubeSat-edu2-convert.stl')
+data = mesh.Mesh.from_file(full_path)
 
 # メインの描画ループ
 fig = plt.figure()
@@ -124,9 +145,13 @@ def update_plot():
     plt.draw()
     plt.pause(1)
 
-# イベントループ
-while plt.fignum_exists(fig.number):
-    update_plot()
-
-plt.close(fig)
-server_socket.close()
+try:
+    # イベントループ
+    while plt.fignum_exists(fig.number):
+        update_plot()
+except KeyboardInterrupt:
+    pass
+finally:
+    plt.close(fig)
+    server_socket.close()
+    print("Server closed and program exited.")

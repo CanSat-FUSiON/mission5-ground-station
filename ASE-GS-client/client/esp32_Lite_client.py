@@ -5,8 +5,8 @@ import json
 import sys
 import numpy as np
 import socket
+#import serial.tools.list_ports
 import serial
-import serial.tools.list_ports
 import threading
 import write_db
 #import csv_logger
