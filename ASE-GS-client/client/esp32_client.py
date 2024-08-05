@@ -79,7 +79,7 @@ class TelemetryLoop:
                 try:
                     socket_client = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #オブジェクトの作成
                     socket_client.connect((host, port_3dviewer))
-                    data = json_str
+                    data = json.dumps(json_data)
                     socket_client.send(data.encode('utf-8')) #データを送信 Python3
                 except:
                     if Debug:
@@ -97,6 +97,7 @@ class Commandloop:
             print("command:")
             cmd = input() + '\n'
             ser.write(cmd.encode())
+            print("send!")
             if Debug:
                 print("   " + cmd, end = "")
     
@@ -115,7 +116,10 @@ class Commandloop:
                         cmd = data.decode('utf-8')
                         #commands.append(cmd)
                         #print(f"Received command from {addr}: {cmd}")
-                        print("from_UI  :" + cmd)
+                        print("from_UI  :")
+                        print(cmd)
+                        ser.write(cmd.encode())
+                        print("send!")
                         print("command:")
 
 def close():
