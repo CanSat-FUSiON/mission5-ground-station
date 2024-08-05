@@ -93,6 +93,7 @@ class TelemetryLoop:
 
             try:
                 database.write_bulk(json_data)  # データベースへの書き込みは省略
+                print(json_str)
             except:
                 print("DBWriteError")
                 sys.exit()
