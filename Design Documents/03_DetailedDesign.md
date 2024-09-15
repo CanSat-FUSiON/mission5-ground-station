@@ -9,8 +9,11 @@
         - `Python`
 
 ## システム構成図
+詳細設計に基づくシステム構成図を示す。
+
 ![](fig/fig2.png)
 
 ## Grafanaによるデータの可視化
-![](fig/fig3.png)
+実際のCanSatテレメトリの可視化例を示す。
 
+![](fig/fig3.png)
