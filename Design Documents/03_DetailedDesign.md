@@ -9,6 +9,8 @@
         - `Python`
 
 ## システム構成図
+![](fig/fig2.png)
 
 ## Grafanaによるデータの可視化
+![](fig/fig3.png)
 
