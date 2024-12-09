@@ -3,6 +3,8 @@
 ## 使い方
 サーバーをDocker(WindowsのDocker Desktopで，内部のエンジンはWSL2)で動かし，USBのCOMポート関連のクライアントをWindowsのローカルで動かす．
 
+(2024/12/10追記. 当日公開のQiita記事にて,win11のみでの利用法を記述. 公開次第リンク貼ります)
+
 ### 環境構築
 1. Dockerをインストール
     https://qiita.com/ryotaro76/items/305d4d61dfd82e3f2bfa
