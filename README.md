@@ -3,7 +3,9 @@
 ## 使い方
 サーバーをDocker(WindowsのDocker Desktopで，内部のエンジンはWSL2)で動かし，USBのCOMポート関連のクライアントをWindowsのローカルで動かす．
 
-(2024/12/10追記. 当日公開のQiita記事にて,win11のみでの利用法を記述. 公開次第リンク貼ります)
+(2024/12/10追記. 以下2つのQiita記事も参考にしていただけますと幸いです。Issues/Pull eequestes/記事へのコメント等でご指摘等いただけますと幸いです。)
+[Grafana + InfluxDBでリアルタイム可視化しよう！【とりあえずやってみる】](https://qiita.com/Attitudecontro3/items/79382643fdec8fe19ad7)
+[Grafana + InfluxDBでリアルタイム可視化しよう！【自分好みに作りたい】](https://qiita.com/Attitudecontro3/items/9b30a47ec5ac9dc62d8b)
 
 ### 環境構築
 1. Dockerをインストール
